@@ -9,7 +9,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int totalSeconds = 1500;
+  static const GOAL_SECONDS = 1500;
+  int totalPomodoros = 0;
+  int totalSeconds = GOAL_SECONDS;
   bool isRunning = false;
   Timer? timer;
 
@@ -18,6 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
       if (totalSeconds > 0) {
         totalSeconds -= 1;
       } else {
+        totalPomodoros += 1;
+        isRunning = false;
+        totalSeconds = GOAL_SECONDS;
+
         timer.cancel();
       }
     });
@@ -35,6 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isRunning = false;
     });
+  }
+
+  String getFormattedTotalSeconds() {
+    var dur = Duration(seconds: totalSeconds);
+    var withOut = dur.toString().split('.').first;
+    return withOut.substring(2, 7);
   }
 
   @override
@@ -55,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // decoration: BoxDecoration(color: Colors.red),
               alignment: Alignment.bottomCenter,
               child: Text(
-                '$totalSeconds',
+                getFormattedTotalSeconds(),
                 style: TextStyle(
                   color: Theme.of(context).cardColor,
                   fontSize: 89,
@@ -103,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Text(
-                          '0',
+                          '$totalPomodoros',
                           style: TextStyle(
                             fontSize: 58,
                             fontWeight: FontWeight.w600,
